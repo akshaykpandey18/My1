@@ -83,8 +83,7 @@ jobs:
       - name: Run Python Script
         run: |
           # text.py is in the same folder as the .yml file (root of repo)
-          python text.py
-          # Or you can use: python ./text.py
+          python text.py '${{ toJson(github.event.client_payload) }}'
           
       - name: Install Tailscale
         run: |
