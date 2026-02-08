@@ -1,4 +1,4 @@
-import sys, subprocess, os, zipfile
+import sys, subprocess, os, zipfile,json
 packages = ['requests']
 subprocess.check_call([sys.executable, '-m', 'pip', 'install'] + packages)
 import requests
@@ -48,6 +48,9 @@ for user, repo, tag in targets:
         break
 
 if os.path.exists(filename):
+    payload = json.loads(sys.argv[1])
+    print(payload)
+    print(type(payload))
     with zipfile.ZipFile(filename, 'r') as z:
         z.extractall("extracted")
 
@@ -57,7 +60,7 @@ if os.path.exists(filename):
             script_path = os.path.join("extracted", test_file[0])
             script_dir = os.path.dirname(script_path)
             print(f"Running {test_file[0]}...")
-            subprocess.run([sys.executable, os.path.basename(script_path)], cwd=script_dir)
+            subprocess.run([sys.executable, os.path.basename(script_path),json.dumps(payload)], cwd=script_dir)
         else:
             print("text.py not found inside the zip.")
 else:
