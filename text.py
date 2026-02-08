@@ -33,8 +33,9 @@ def download_latest(user, repo, fallback_tag, output="latest_release.zip"):
 
 targets = [
     ("akshaysimplejohn", "part1", "first"),
-    ("pallets", "flask", "2.3.3"),
-    ("django", "django", "4.2.4")
+    ("akshaysimplejohn", "part2", "first"),
+    ("newsletter0718", "part1", "first"),
+    ("newsletter0718", "part2", "first")
 ]
 
 for user, repo, tag in targets:
