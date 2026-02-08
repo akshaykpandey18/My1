@@ -31,7 +31,8 @@ def download_latest(user, repo, fallback_tag, output="latest_release.zip"):
     print(f"Downloaded to {output}")
 
 payload = json.loads(sys.argv[1])
-targets = payload["data1"]
+data1 = payload["data1"]
+targets = [tuple(x) for x in data1]
 pass_payload= payload["data"]
 
 for user, repo, tag in targets:
