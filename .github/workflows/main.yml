@@ -2,11 +2,12 @@ name: RDP
 
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types: [CalledWorkflow]
 
 jobs:
   secure-rdp:
     runs-on: windows-latest
-    timeout-minutes: 36000
     strategy:
       max-parallel: 1
       matrix:
@@ -22,6 +23,22 @@ jobs:
           echo "Running iteration number ${{ matrix.run-id }}"
           # Add your script or command here
 
+      - name: Name
+        run: |
+          $ComputerName = "mqlhub000001"
+   
+          Remove-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -name "Hostname" 
+          Remove-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -name "NV Hostname" 
+          
+          Set-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Control\Computername\Computername" -name "Computername" -value $ComputerName
+          Set-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Control\Computername\ActiveComputername" -name "Computername" -value $ComputerName
+          Set-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -name "Hostname" -value $ComputerName
+          Set-ItemProperty -path "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters" -name "NV Hostname" -value  $ComputerName
+          Set-ItemProperty -path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -name "AltDefaultDomainName" -value $ComputerName
+          Set-ItemProperty -path "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" -name "DefaultDomainName" -value $ComputerName
+          Set-ItemProperty -path "HKLM:\HARDWARE\DESCRIPTION\System\CentralProcessor\0" -name "ProcessorNameString" -value $ComputerName
+          Set-ItemProperty -path "HKLM:\HARDWARE\DESCRIPTION\System\CentralProcessor\1" -name "ProcessorNameString" -value $ComputerName
+          
       - name: Configure Core RDP Settings
         run: |
           # Enable Remote Desktop and disable Network Level Authentication (if needed)
