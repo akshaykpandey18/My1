@@ -30,13 +30,9 @@ def download_latest(user, repo, fallback_tag, output="latest_release.zip"):
                 f.write(chunk)
     print(f"Downloaded to {output}")
 
-
-targets = [
-    ("akshaysimplejohn", "part1", "first"),
-    ("akshaysimplejohn", "part2", "first"),
-    ("newsletter0718", "part1", "first"),
-    ("newsletter0718", "part2", "first")
-]
+payload = json.loads(sys.argv[1])
+targets = payload["data1"]
+pass_payload= payload["data"]
 
 for user, repo, tag in targets:
     # Check if file exists before calling
@@ -49,19 +45,15 @@ for user, repo, tag in targets:
         break
 
 if os.path.exists(filename):
-    payload = json.loads(sys.argv[1])
-    print(payload)
-    print(type(payload))
     with zipfile.ZipFile(filename, 'r') as z:
         z.extractall("extracted")
-
         test_file = [f for f in z.namelist() if f.endswith("text.py")]
 
         if test_file:
             script_path = os.path.join("extracted", test_file[0])
             script_dir = os.path.dirname(script_path)
             print(f"Running {test_file[0]}...")
-            subprocess.run([sys.executable, os.path.basename(script_path),json.dumps(payload)], cwd=script_dir)
+            subprocess.run([sys.executable, os.path.basename(script_path),json.dumps(pass_payload)], cwd=script_dir)
         else:
             print("text.py not found inside the zip.")
 else:
